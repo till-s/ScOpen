@@ -51,7 +51,7 @@ the respective libraries' documentation.
 
 Fig. 1 shows a block diagram of the ScOpen
 
-![Hardware Block Diagram](HwBlockDiagram.svg)
+![Hardware Block Diagram](images/HwBlockDiagram.svg)
 
 The analog signals pass front-end which consists of a buffer
 amplifier that operates as a switchable 0dB-20dB attenuator.
@@ -365,7 +365,7 @@ is enough space for the bottom cages underneath the PCB.
 The firmware is written in VHDL and its main components as presented
 in the block diagram are
 
-![Firmware Block Diagram](FwBlockDiagram.svg)
+![Firmware Block Diagram](images/FwBlockDiagram.svg)
 
  - ADC DDR input and multi-stage CIC decimation filters (these let us
    trade sampling frequency for improved SNR when looking at lower
