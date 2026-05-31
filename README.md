@@ -35,7 +35,45 @@ which you can undersample with this device.
 The dual-channel MAX195xx ADC can easily be processed by a low-cost
 Trion T20 FPGA and an inexpensive SDRAM.
 
+## Licensing
+
+The project itself is released under the CERN-OHL-P V2 (hardware
+design) and MIT licences (software and HDL). The USB stack
+(mecatica; an external project) uses the EUPL.
+
+Other libraries (which are not git submodules of this super-project),
+e.g., Qt and Qwt have their own licensing terms; please consult
+the respective libraries' documentation.
+
 ## Hardware Design
+
+### Block Diagram
+
+Fig. 1 shows a block diagram of the ScOpen
+
+![Hardware Block Diagram](HwBlockDiagram.svg)
+
+The analog signals pass front-end which consists of a buffer
+amplifier that operates as a switchable 0dB-20dB attenuator.
+The front-end also supports AC/DC coupled modes and an internal
+50-Ohm termination.
+
+A PGA with a 40dB programmable-gain range converts the signal
+into differential mode. A calibration DAC feeds into the PGA
+as well. This allows for compensating small offset voltages
+or making calibration measurements.
+
+A VersaClock PLL provides the 130Mhz clock for the dual-channel
+ADC. We use the DDR output mode of the ADC and feed the digital
+data into the Trion T20 FPGA.
+
+Sampling data are stored in a SDRAM and are read out of the
+device via USB. The various peripherals and internal
+features (e.g., triggering) are also controlled by software
+using the USB connectivity.
+
+Several switching and LDO power converters generate all the
+necessary voltage levels from the USB's 5V.
 
 ### Input Stage
 
@@ -324,7 +362,10 @@ is enough space for the bottom cages underneath the PCB.
 
 ## Firmware
 
-The firmware is written in VHDL and its main components are
+The firmware is written in VHDL and its main components as presented
+in the block diagram are
+
+![Firmware Block Diagram](FwBlockDiagram.svg)
 
  - ADC DDR input and multi-stage CIC decimation filters (these let us
    trade sampling frequency for improved SNR when looking at lower
@@ -372,7 +413,7 @@ Some of the features offered by the GUI application include
  - Live display of FFTs. Zooming and panning.
  - Parameter control (triggering, decimation, gain control, input stage, etc.).
  - Cursors for measurements.
- - Data storage in HDF5 files.
+ - Data and metadata storage in HDF5 files.
  - Save/restore settings in JSON files.
  - Hotkeys (e.g., it is possible to initiate a delayed single-shot acquisition
    with a key. Useful if you only have two hands: hit the key then place the
@@ -507,3 +548,10 @@ The ususal
 
 The aforementioned `bbcli` utility can be found in `build/usbadc-support/sw/bbcli`. Use
 cmake's installation features to install the stuff anywhere you like.
+
+#### Why Are There Multiple Clones of `usbadc-support`?
+
+This library has HDL and sofware parts which may be out of sync; i.e.,
+when adding new software features the HDL does not necessarily have
+to be updated. This is why the firmware subproject/submodule may use
+a different checkout than the software subproject/submodule.
