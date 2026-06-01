@@ -1,6 +1,6 @@
 # The ScOpen - an Affordable 2-Channel 130MSPS USB Scope
 
-This project's goal was the development of a completely open
+The goal for this project was the development of a completely open
 (hard-, gate- and software) and affordable oscilloscope for
 hobbyists.
 
