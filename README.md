@@ -469,7 +469,7 @@ the Efinity software from Efinix website.
 Before you can start with synthesis, however, you need to generate a few
 files which are not maintained in git.
 
-     chdir fw
+     chdir fw-hdl
      source <efinity-top-dir>/bin/setup.sh
      ./modules/efx-scripts/generate_project.py
 
@@ -510,19 +510,26 @@ to the ScOpen.
 
      bbcli -d /dev/ttyACM0 -V
 
-should now print some version information. You can now use `bbcli` to write
+should now print some version information. You can now use `flashTool` CLI to write
 the same bitstream into the configuration flash. Note, however, that the utility
-requires a different file format (note the different suffix):
+requires a different file format (note the different suffix), i.e., not the `.bit`
+file which is used by the Efinity JTAG programmer:
 
-     bbcli -d /dev/ttyACM0 -a0 -f outflow/scope_v3.hex.bin -SWena,Erase,Prog -!
+     flashTool -d /dev/ttyACM0  -f <top>/fw-hdl/outflow/scope_v3.hex.bin
 
-This should show a number of progress marks ('Z' while erasing, '.' while writing and 'v'
-while verifying) and be done in 20 seconds. The 'Erase' operation is not necessary
-when the flash is blank but once you start overwriting you'll need it. It is also
-important to remember that the design just written to flash is *not* yet loaded into
-the FPGA! In this particular case it is identical to the one loaded through JTAG
+This should show a number of progress marks ('E' while erasing, 'Z' while verifying
+erasyre, 'W' while writing and 'V' while verifying the new content) and be done in
+20 seconds.
+
+It is important to remember that the design just written to flash is *not* yet loaded
+into the FPGA! In this particular case it is identical to the one loaded through JTAG
 but if you burn an updated bitstream then you have to power-cycle the board or press
 the reset button in order to reconfigure the FPGA.
+
+Programming of the flash (assuming the FPGA is configured with a bitstream
+already) is also supported by the GUI application. In the 'tools' menu select
+the 'Program Firmware to Flash' item. Navigate to `fw-hdl/outflow/`, select
+the `scope_v3.hex.bin` file and hit 'OK'.
 
 ## Software
 
@@ -546,8 +553,9 @@ The ususal
      cmake -B build .
      make -j -C build
 
-The aforementioned `bbcli` utility can be found in `build/usbadc-support/sw/bbcli`. Use
-cmake's installation features to install the stuff anywhere you like.
+The aforementioned `bbcli` utility can be found in `build/usbadc-support/sw/bbcli`. 
+The 'flashTool' CLI and 'scope' GUI are under `build/`.
+Use cmake's installation features to install the stuff anywhere you like.
 
 #### Why Are There Multiple Clones of `usbadc-support`?
 
