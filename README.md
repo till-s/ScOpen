@@ -45,6 +45,22 @@ Other libraries (which are not git submodules of this super-project),
 e.g., Qt and Qwt have their own licensing terms; please consult
 the respective libraries' documentation.
 
+## Submodules
+
+The project uses a number of git submodules. After cloning this top repository
+don't forget to
+
+     git submodule update --init --recursive
+
+in order to ensure all the components are in place.
+
+### Why Are There Multiple Clones of `usbadc-support`?
+
+This library has HDL and sofware parts which may be out of sync; i.e.,
+when adding new software features the HDL does not necessarily have
+to be updated. This is why the firmware subproject/submodule may use
+a different checkout than the software subproject/submodule.
+
 ## Hardware Design
 
 ### Block Diagram
@@ -557,9 +573,4 @@ The aforementioned `bbcli` utility can be found in `build/usbadc-support/sw/bbcl
 The 'flashTool' CLI and 'scope' GUI are under `build/`.
 Use cmake's installation features to install the stuff anywhere you like.
 
-#### Why Are There Multiple Clones of `usbadc-support`?
 
-This library has HDL and sofware parts which may be out of sync; i.e.,
-when adding new software features the HDL does not necessarily have
-to be updated. This is why the firmware subproject/submodule may use
-a different checkout than the software subproject/submodule.
