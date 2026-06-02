@@ -560,9 +560,9 @@ Make sure you have
  - c and c++ compiler
  - cmake and make or ninja
  - Qt5 and Qwt
- - HDF5 (C, not C++ bindings!)
  - fftw3
- - jansson
+ - HDF5 (C, not C++ bindings!) (optional)
+ - jansson (optional)
 
 make sure you have development packages for these libraries. Cmake will let you know
 if something is missing.
@@ -571,7 +571,7 @@ if something is missing.
 
 The ususal
 
-     chdir sw
+     chdir sw-gui
      cmake -B build .
      make -j -C build
 
