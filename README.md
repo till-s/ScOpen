@@ -576,7 +576,5 @@ The ususal
      make -j -C build
 
 The aforementioned `bbcli` utility can be found in `build/usbadc-support/sw/bbcli`. 
-The 'flashTool' CLI and 'scope' GUI are under `build/`.
+The `flashTool` CLI and `scope` GUI are under `build/`.
 Use cmake's installation features to install the stuff anywhere you like.
-
-
