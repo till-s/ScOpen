@@ -548,8 +548,8 @@ already) is also supported by the GUI application. In the 'tools' menu select
 the 'Program Firmware to Flash' item. Navigate to `fw-hdl/outflow/`, select
 the `scope_v3.hex.bin` file and hit 'OK'.
 
-[^1]: [Efinity can use a simple FTDI-chip based JTAG adapter.]
-(https://www.efinixinc.com/docs-html/efinity/topics/task-jtag-programming.html)
+[^1]: [Efinity can use a simple FTDI-chip based JTAG adapter.
+](https://www.efinixinc.com/docs-html/efinity/topics/task-jtag-programming.html)
 E.g., a [mini-module](https://ftdichip.com/products/ft2232h-mini-module/) will do
 or you can [build one yourself](https://github.com/till-s/trion-lqfp144-test).
 
