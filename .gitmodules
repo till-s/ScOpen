@@ -1,0 +1,3 @@
+[submodule "sw-gui"]
+	path = sw-gui
+	url = ./usbscope-sw-app.git
