@@ -478,7 +478,7 @@ everything else works.
 ### Firmware
 
 In order to generate the FPGA bitstream you need to download and install
-the Efinity software from Efinix website.
+the Efinity software from [Efinix' website](www.efinixinc.com).
 
 #### Preparation
 
