@@ -5,3 +5,6 @@
 	path = hw-kicad
 	url = ../kicad-usbadc-a7m195xx.git
 	branch = trion_v3_3
+[submodule "fw-hdl"]
+	path = fw-hdl
+	url = ../usbscope-trion.git
