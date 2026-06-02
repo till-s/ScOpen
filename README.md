@@ -478,7 +478,7 @@ everything else works.
 ### Firmware
 
 In order to generate the FPGA bitstream you need to download and install
-the Efinity software from [Efinix' website](www.efinixinc.com).
+the Efinity software from [Efinix' website](https://www.efinixinc.com).
 
 #### Preparation
 
@@ -514,8 +514,9 @@ to a computer using a USB cable (the connection is used for data once the
 FPGA is configured),
 
 With a blank flash you have to use JTAG to configure the Trion with your
-first design. You have to point the Efinity programmer to the `scope_v3.bit` file
-which should be in the `outflow` directory.
+first design. You have to point the Efinity programmer[^1] to the `scope_v3.bit`
+file which should be in the `outflow` directory.
+
 
 If the FPGA configures correctly then your computer should now recognize the
 ScOpen as a ACM device on USB (use lsusb or similar).
@@ -546,6 +547,11 @@ Programming of the flash (assuming the FPGA is configured with a bitstream
 already) is also supported by the GUI application. In the 'tools' menu select
 the 'Program Firmware to Flash' item. Navigate to `fw-hdl/outflow/`, select
 the `scope_v3.hex.bin` file and hit 'OK'.
+
+[^1]: [Efinity can use a simple FTDI-chip based JTAG adapter.]
+(https://www.efinixinc.com/docs-html/efinity/topics/task-jtag-programming.html)
+E.g., a [mini-module](https://ftdichip.com/products/ft2232h-mini-module/) will do
+or you can [build one yourself](https://github.com/till-s/trion-lqfp144-test).
 
 ## Software
 
