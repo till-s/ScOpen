@@ -8,7 +8,7 @@ The licenses of subprojects can be found here:
 ./fw-hdl/modules/mecatica-usb/README.md (EUPL)
 
 To the files in this directory and the subdirectories which are not
-submodules/repos the following license is granted:
+submodules/repos the following license shall apply:
 
 MIT License
 
