@@ -8,12 +8,14 @@ hobbyists.
 
 ### Key Features
 
- - Two channels, 26mVpp to 20Vpp (~60dB adjustable gain)
+ - Two channels, 26mVpp to 20Vpp (~60dB adjustable gain) full-scale
  - DC/AC coupled inputs
  - 50-Ohm termination
  - 130MSPS, 10-bit resolution
  - Memory for ~ 13Msamples
  - USB-C for power and high-speed (USB2) data connection
+ - Presents itself as a standard ACM class TTY device; no special
+   drivers on the host computer are required.
  - External trigger in or out
  - Clock output (e.g., for probe calibration)
  - Half of the FPGA resources are available for users to play
@@ -56,7 +58,7 @@ in order to ensure all the components are in place.
 
 ### Why Are There Multiple Clones of `usbadc-support`?
 
-This library has HDL and sofware parts which may be out of sync; i.e.,
+This library has HDL and software parts which may be out of sync; i.e.,
 when adding new software features the HDL does not necessarily have
 to be updated. This is why the firmware subproject/submodule may use
 a different checkout than the software subproject/submodule.
@@ -69,7 +71,7 @@ Fig. 1 shows a block diagram of the ScOpen
 
 ![Hardware Block Diagram](images/HwBlockDiagram.svg)
 
-The analog signals pass front-end which consists of a buffer
+The analog signals pass the front-end which consists of a buffer
 amplifier that operates as a switchable 0dB-20dB attenuator.
 The front-end also supports AC/DC coupled modes and an internal
 50-Ohm termination.
@@ -83,7 +85,7 @@ A VersaClock PLL provides the 130Mhz clock for the dual-channel
 ADC. We use the DDR output mode of the ADC and feed the digital
 data into the Trion T20 FPGA.
 
-Sampling data are stored in a SDRAM and are read out of the
+Sample data are stored in a SDRAM and are read out of the
 device via USB. The various peripherals and internal
 features (e.g., triggering) are also controlled by software
 using the USB connectivity.
@@ -178,14 +180,14 @@ interface which reduces the required connections to the FPGA.
 
 ### ADC Clock PLL
 
-I decided to use a Versaclock-6e chip from Renesas. Sadly, Silicon-labs'
+I decided to use a VersaClock-6e chip from Renesas. Sadly, Silicon-labs'
 documentation and support became abysmal after their clock business was
-bought by Skyworks. The versaclock is simple enough and one of the
+bought by Skyworks. The VersaClock is simple enough and one of the
 cheapest options to get a high-quality sampling clock.
 
 Unfortunately, I found that the documentation is incomplete and sometimes
 incorrect (settings don't do what they claim to do). It is nice that there
-are several pin-compatible options (even a versaclock-5 chip can be used
+are several pin-compatible options (even a VersaClock-5 chip can be used
 on our board). I also appreciate very much that Renesas supplied me
 with a generous amount (I believe due to a misunderstanding) of 5P49V6975
 chips (the one with the built-in crystal) so that I never again will
@@ -225,7 +227,9 @@ cascade dividers 1 and 2 - but not 3 or 4. Thus, no cascading at all would
 be possible for output 1.
 
 The external clock output can also be programmed to forward the 25Mhz
-reference for synchronizing the clock of a second unit.
+reference for synchronizing the clock of a second unit (such a secondary
+unit could take it's reference from the same BNC connector -- configured
+as an input -- that the primary unit uses for the clock output).
 
 Output 4 can optionally be used to clock the USB Phy but that would
 require logic in the FPGA to configure the clock as no USB connectivity
@@ -238,7 +242,8 @@ unused in the HDL design).
 
 I had built a first prototype using an Artix-7 FPGA and even managed
 to solder the BGA package but then decided it was too expensive and
-I even had problems to get timing closure.
+I even had problems to get timing closure at least with the lower
+speed grades.
 
 In my search for cheaper solutions I came across Efinix' Trion
 family which I since have used in several projects. I must say that
@@ -290,7 +295,7 @@ time more samples can be stored.
 We use a standard ULPI transceiver to provide high-speed USB connectivity.
 The 480Mbps are still adequate for this application. The USB device
 funcionality is implemented in the FPGA logic. To a host computer the device
-will appear as a standard communications class ACM device.
+will appear as a standard communications class ACM device (TTY).
 
 The phy generates a 60Mhz clock which is forwarded to the FPGA where it
 clocks all of the 'slower' logic downstream of the raw data acquisition.
@@ -317,7 +322,7 @@ configuration. Since the input voltage that this converter 'sees' is
 other voltages.
 
 For the I/O expander which controls the front end we had originally
-used the 5V USB bus voltage directly but then found that this fed
+used the 5V USB bus voltage directly but then found that this coupled
 intolerable noise into the input stage so that a 4V LDO was added to
 filter that rail.
 
@@ -330,12 +335,16 @@ adding the resistors and beads.
 ### Connectors
 
 There are three BNC connectors in the front; the LHS and middle
-BNC are the two inputs and on the RHS there is the clock IO.
+BNC are the two inputs and on the RHS there is the clock I/O.
 
 On the back side there is a single BNC which serves as a buffered
 GPIO (5 or 3.3V levels are selectable by means of 0-ohm jumpers).
 The GPIO is used as an external trigger input or output (to
 trigger a cascaded second unit).
+
+There is also an 'expansion' header which provides a connection
+to two spare FPGA pins and several supply voltages. This can be
+used for user-defined extensions or tests.
 
 The USB-C connector is also situated at the back.
 
@@ -348,6 +357,23 @@ located next to the clock output (RHS BNC) in the front.
 A bi-color (R/G) LED adjacent to the USB connector serves as a power
 and configuration indicator. Red indicates that there is power but the
 FPGA is not configured, green indicates successful configuration.
+
+   | LED  | Position  | Color  | Description             |
+   | :--: | :-------: | :----: | :---------------------: |
+   | D5   | Front LHS | RED    | Channel-A Over-range    |
+   |      |           | GRN    | Channel-A Triggered     |
+   |      |           | BLU    | Channel-A 50-Ohm Term.  |
+   | D6   | Front MID | RED    | Channel-B Over-range    |
+   |      |           | GRN    | Channel-B Triggered     |
+   |      |           | BLU    | Channel-B 50-Ohm Term.  |
+   | D14  | Back  RHS | RED    | Unused                  |
+   |      |           | GRN    | Externally Triggered    |
+   |      |           | BLU    | Configured as Trig. Out |
+   | D3   | Back MIDR | RED    | FPGA reconfig. request  |
+   |      |           | GRN    | All PLLs locked         |
+   |      |           | BLU    | Unused                  |
+   | D15  | Back MIDR | RED    | FPGA not configured     |
+   |      |           | GRN    | FPGA configured         |
 
 ### JTAG and Expansion Header
 
@@ -430,7 +456,7 @@ Some of the features offered by the GUI application include
  - Parameter control (triggering, decimation, gain control, input stage, etc.).
  - Cursors for measurements.
  - Data and metadata storage in HDF5 files.
- - Save/restore settings in JSON files.
+ - Save/restore scope settings in JSON files.
  - Hotkeys (e.g., it is possible to initiate a delayed single-shot acquisition
    with a key. Useful if you only have two hands: hit the key then place the
    probes and wait for the scope to be armed and triggered).
@@ -517,7 +543,6 @@ With a blank flash you have to use JTAG to configure the Trion with your
 first design. You have to point the Efinity programmer[^1] to the `scope_v3.bit`
 file which should be in the `outflow` directory.
 
-
 If the FPGA configures correctly then your computer should now recognize the
 ScOpen as a ACM device on USB (use lsusb or similar).
 
@@ -538,11 +563,6 @@ This should show a number of progress marks ('E' while erasing, 'Z' while verify
 erasyre, 'W' while writing and 'V' while verifying the new content) and be done in
 20 seconds.
 
-It is important to remember that the design just written to flash is *not* yet loaded
-into the FPGA! In this particular case it is identical to the one loaded through JTAG
-but if you burn an updated bitstream then you have to power-cycle the board or press
-the reset button in order to reconfigure the FPGA.
-
 Programming of the flash (assuming the FPGA is configured with a bitstream
 already) is also supported by the GUI application. In the 'tools' menu select
 the 'Program Firmware to Flash' item. Navigate to `fw-hdl/outflow/`, select
@@ -552,6 +572,25 @@ the `scope_v3.hex.bin` file and hit 'OK'.
 ](https://www.efinixinc.com/docs-html/efinity/topics/task-jtag-programming.html)
 E.g., a [mini-module](https://ftdichip.com/products/ft2232h-mini-module/) will do
 or you can [build one yourself](https://github.com/till-s/trion-lqfp144-test).
+
+### Calibration
+
+Under `modules/usbadc-support/sw` there is a utility that performs a (coarse)
+calibration of the instrument using the on-board DAC. The calibration
+parameters can be stored in flash and are automatically loaded and
+applied by the GUI software.
+
+  1. Build the `scopeCal` utility (see software section).
+  2. Calibration can only on a freshly initialized device *before* any
+     software has been used. Perform a power-cycle (note that reprogramming
+     the FPGA is not enough as some state is kept in off-FPGA devices).
+  3. Run
+
+        scopeCal -d /dev/ttyACM0 -w
+
+  4. Re-calbration requires erasing an existing calibration first
+     (use `-E`) followed by a power-cycle.
+
 
 ## Software
 
@@ -564,8 +603,8 @@ Make sure you have
  - HDF5 (C, not C++ bindings!) (optional)
  - jansson (optional)
 
-make sure you have development packages for these libraries. Cmake will let you know
-if something is missing.
+make sure you have development packages for these libraries. Cmake will let you
+know if something is missing.
 
 ### Build
 
@@ -575,6 +614,7 @@ The ususal
      cmake -B build .
      make -j -C build
 
-The aforementioned `bbcli` utility can be found in `build/usbadc-support/sw/bbcli`. 
-The `flashTool` CLI and `scope` GUI are under `build/`.
+The aforementioned `bbcli` and `scopeCal` utilities can be found in
+`build/usbadc-support/sw/`.  The `flashTool` CLI and `scope` GUI are under
+`build/`.
 Use cmake's installation features to install the stuff anywhere you like.
