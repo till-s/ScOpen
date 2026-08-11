@@ -65,9 +65,12 @@ a different checkout than the software subproject/submodule.
 
 ## Hardware Design
 
+The KiCAD design files are available in the `hw-kicad/hw` folder. A
+PDF version of the schematics is also [available](hw-kicad/hw/plot/usbadc.pdf).
+
 ### Block Diagram
 
-Fig. 1 shows a block diagram of the ScOpen
+Fig. 1 shows a block diagram of the ScOpen;
 
 ![Hardware Block Diagram](images/HwBlockDiagram.svg)
 
