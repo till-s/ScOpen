@@ -66,7 +66,7 @@ a different checkout than the software subproject/submodule.
 ## Hardware Design
 
 The KiCAD design files are available in the `hw-kicad/hw` folder. A
-PDF version of the schematics is also [available](hw-kicad/hw/plot/usbadc.pdf).
+PDF version of the schematics is also [available](images/usbadc.pdf).
 
 ### Block Diagram
 
