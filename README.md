@@ -555,7 +555,7 @@ to the ScOpen.
 
      bbcli -d /dev/ttyACM0 -V
 
-should now print some version information. You can now use `flashTool` CLI to write
+should print some version information. You can now use `flashTool` CLI to write
 the same bitstream into the configuration flash. Note, however, that the utility
 requires a different file format (note the different suffix), i.e., not the `.bit`
 file which is used by the Efinity JTAG programmer:
@@ -606,7 +606,7 @@ Make sure you have
  - HDF5 (C, not C++ bindings!) (optional)
  - jansson (optional)
 
-make sure you have development packages for these libraries. Cmake will let you
+and the development packages for the listed libraries. Cmake will let you
 know if something is missing.
 
 ### Build
