@@ -244,9 +244,9 @@ unused in the HDL design).
 ### FPGA
 
 I had built a first prototype using an Artix-7 FPGA and even managed
-to solder the BGA package but then decided it was too expensive and
-I even had problems to get timing closure at least with the lower
-speed grades.
+to solder the BGA package but then decided it was too expensive.
+Somewhat surprisingly it was not easy to achieve timing closure at
+least with the lower speed grades.
 
 In my search for cheaper solutions I came across Efinix' Trion
 family which I since have used in several projects. I must say that
@@ -256,9 +256,10 @@ for simple projects (Artix w/o transceivers costs 3-5 times more).
  - affordable (T20 with 20kLE in fastest speed grade, LQFP-144 @CHF10)
  - LQFP packages available; not only BGA (while I found these are also
    not hard to reflow-solder it is harder to route w/o in-pad vias which
-   are still expensive).
+   are expensive).
  - good documentation, support, forums.
- - usable vendor tools; some parts of the programmer written in python.
+ - usable vendor tools; some parts of the programmer written in python
+   and can be hacked/adapted/fixed when needed.
  - JTAG with an off-the-shelf FTDI chip; no special vendor driver necessary.
 
 The FPGA configuration is stored in a vanilla SPI flash. When blank,
@@ -300,8 +301,12 @@ The 480Mbps are still adequate for this application. The USB device
 funcionality is implemented in the FPGA logic. To a host computer the device
 will appear as a standard communications class ACM device (TTY).
 
-The phy generates a 60Mhz clock which is forwarded to the FPGA where it
+The phy generates a 60Mhz clock[^2] which is forwarded to the FPGA where it
 clocks all of the 'slower' logic downstream of the raw data acquisition.
+
+[^2]: The reference clock is a dedicated 26MHz crystal-oscillator. Optionally,
+this could be omitted and the VersaClock used instead but as explained above
+it would require programming the clock from the FPGA logic after configuration.
 
 #### USB-C Connector
 
