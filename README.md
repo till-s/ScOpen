@@ -626,3 +626,36 @@ The aforementioned `bbcli` and `scopeCal` utilities can be found in
 `build/usbadc-support/sw/`.  The `flashTool` CLI and `scope` GUI are under
 `build/`.
 Use cmake's installation features to install the stuff anywhere you like.
+
+## Screenshots
+
+Here are a few screen shots showing the device in action (operated at 64k
+samples).
+
+The first two pictures show FFTs of the device set to max. sensitivity with
+no signal applied. At full clock speed:
+
+![No signal; 130MSPS, max. sensitivity](images/max_sensitivity_130MSPS.png)
+
+The two spurs on channel A (blue) are aliases of the SDRAM clock and its
+second harmonic leaking into this channel (channel B/black is better).
+
+The next picture again shows the response of the device w/o external signal
+but downsampled to 1MSPS. It can be seen that the noise floor increases at
+lower frequencies. This is expected as the resistive part of the input
+attenuator generates considerable thermal noise into a bandwidth determined
+by the input RC constant (approximately 1MOhm//10pF = 16kHz).
+
+![No signal; 130MSPS, max. sensitivity](images/max_sensitivity_1MSPS.png)
+
+The last picture shows the transient of a 1MHz sine wave as the generator
+is being switched on. The GUI has been zoomed around the trigger area and
+the two cursors (magenta/green) have been placed to take measurements which
+are shown on the RHS of the GUI. An FFT is presented below (also zoomable and
+featuring its own cursors/measurements).
+
+![A transient](images/transient.png)
+
+
+From the menu-bar data and metadata can be saved to HDF5 format and instrument
+settings can be saved or loaded to/from JSON files.
